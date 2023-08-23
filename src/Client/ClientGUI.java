@@ -38,7 +38,8 @@ public class ClientGUI extends JFrame{
         JButton clearAllButton = new JButton("Clear all");
         // components - second row - request
         JPanel requestPanel = new JPanel(new BorderLayout());
-        JLabel requestLabel = new JLabel("Input meanings here if you want to create or update (use semicolon to separate each meaning)");
+        JLabel requestLabel = new JLabel("Input meanings here if you want to create or update (one meaning per line)");
+        meaningTextArea = new JTextArea(10, 30);
         meaningTextArea = new JTextArea(10, 30);
         requestPanel.add(requestLabel, BorderLayout.NORTH);
         requestPanel.add(new JScrollPane(meaningTextArea), BorderLayout.CENTER);
@@ -128,7 +129,11 @@ public class ClientGUI extends JFrame{
                 }
                 else{
                     if(commandCode == CommandCode.RETRIEVE){
-                        responseTextArea.setText(response.getMeanings().toString());
+                        String linedOutput = "";
+                        for(String str:response.getMeanings()){
+                            linedOutput += str + "\n";
+                        }
+                        responseTextArea.setText(linedOutput);
                     }
                     else{
                         responseTextArea.setText("*" + successPrompt + "*");
@@ -210,12 +215,16 @@ public class ClientGUI extends JFrame{
         }
         // validate meanings input
         if(needToInputMeanings && meanings.isEmpty()){
-            showInputErrorDialog("The input meanings is empty");
+            showInputErrorDialog("Please input one or more meanings. One meaning per line");
             return null;
         }
         else{
-            String[] meaningArray = meanings.split(";");
-            output.addAll(new ArrayList<>(Arrays.asList(meaningArray)));
+            String[] meaningArray = meanings.split("\n");
+            for(String str:new ArrayList<>(Arrays.asList(meaningArray))){
+                if(!str.isEmpty()){
+                    output.add(str);
+                }
+            }
         }
         return output;
     }

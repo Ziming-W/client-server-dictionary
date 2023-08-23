@@ -6,16 +6,18 @@ import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Dictionary {
-    private HashMap<String, ArrayList<String>> entries;
+    private JSONObject jsonObject;
+    private String path;
 
     public Dictionary(String path) {
-        entries = new HashMap<>();
         try {
+            this.path = path;
             // read in file as json string
             FileReader fileReader = new FileReader(path);
             StringBuilder stringBuilder = new StringBuilder();
@@ -25,15 +27,7 @@ public class Dictionary {
             }
             fileReader.close();
             // parse json string to json object, and write to hashmap
-            JSONObject jsonObject = new JSONObject(stringBuilder.toString());
-            for (String key : jsonObject.keySet()) {
-                JSONArray valuesArray = jsonObject.getJSONArray(key);
-                ArrayList<String> values = new ArrayList<>();
-                for (int i = 0; i < valuesArray.length(); i++) {
-                    values.add(valuesArray.getString(i));
-                }
-                entries.put(key, values);
-            }
+            jsonObject = new JSONObject(stringBuilder.toString());
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + path);
             System.exit(1);
@@ -48,46 +42,62 @@ public class Dictionary {
             System.exit(1);
         }
     }
+
     /* CRUD*/
 
-    /*
-    create
-     */
     public synchronized boolean create(String word, ArrayList<String> meanings){
-        if(entries.containsKey(word)){
+        if(jsonObject.has(word)){
             return false;
         }
-        entries.put(word, meanings);
+        jsonObject.put(word, meanings);
+        writeToJsonFile();
         return true;
     }
 
-    /*
-    Retrieve
-     */
     public ArrayList<String> retrieve(String word){
-        return entries.get(word);
+        if(!jsonObject.has(word)){
+            return null;
+        }
+        ArrayList<String> meanings = new ArrayList<>();
+        JSONArray jsonArray = jsonObject.getJSONArray(word);
+        for(int i = 0; i < jsonArray.length(); i++){
+            meanings.add(jsonArray.getString(i));
+        }
+        return meanings;
     }
 
-    /*
-    Update
-     */
     public synchronized boolean update(String word, ArrayList<String> meanings){
-        if(!entries.containsKey(word)){
+        if(!jsonObject.has(word)){
             return false;
         }
-        entries.put(word, meanings);
+        jsonObject.put(word, meanings);
+        writeToJsonFile();
         return true;
     }
 
-    /*
-    Delete
-     */
     public synchronized boolean delete(String word){
-        if(!entries.containsKey(word)){
+        if(!jsonObject.has(word)){
             return false;
         }
-        entries.remove(word);
+        jsonObject.remove(word);
+        writeToJsonFile();
         return true;
+    }
+
+    /**
+     * write to json file
+     */
+    private void writeToJsonFile(){
+        try{
+            FileWriter fileWriter = new FileWriter(path);
+            fileWriter.write(jsonObject.toString(4));
+            fileWriter.flush();
+            fileWriter.close();
+            System.out.println("write to json file");
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
     }
 
 }
