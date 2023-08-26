@@ -1,9 +1,5 @@
 package Client;
 
-import Commnication.ClientRequest;
-import Commnication.CommandCode;
-import Commnication.ServerResponse;
-
 import javax.swing.*;
 
 import java.util.regex.Pattern;

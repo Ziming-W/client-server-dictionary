@@ -1,8 +1,8 @@
 package Client;
 
-import Commnication.ClientRequest;
-import Commnication.CommandCode;
-import Commnication.ServerResponse;
+import Communication.ClientRequest;
+import Communication.CommandCode;
+import Communication.ServerResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,7 +125,8 @@ public class ClientGUI extends JFrame{
                     return;
                 }
                 else if(!response.isSuccessful()){
-                    responseTextArea.setText("*" + failPrompt + "*");
+                        responseTextArea.setText("");
+                        showErrorDialog(failPrompt);
                 }
                 else{
                     if(commandCode == CommandCode.RETRIEVE){
@@ -136,7 +137,7 @@ public class ClientGUI extends JFrame{
                         responseTextArea.setText(linedOutput);
                     }
                     else{
-                        responseTextArea.setText("*" + successPrompt + "*");
+                        showSuccessDialog(successPrompt);
                     }
                 }
             }
@@ -162,37 +163,36 @@ public class ClientGUI extends JFrame{
             ServerResponse response = (ServerResponse)objectInputStream.readObject();
             return response;
         }  catch (UnknownHostException e) {
-            showConnectionErrorDialog("Unknown host exception");
+            showErrorDialog("Unknown host exception");
         } catch (IOException e) {
-            showConnectionErrorDialog("IO exception, the server might be down or doesn't exist at this address/port");
+            showErrorDialog("IO exception, the server might be down or doesn't exist at this address/port");
         } catch (ClassNotFoundException e) {
-            showConnectionErrorDialog("Class not found exception");
+            showErrorDialog("Class not found exception");
         }
         return null;
     }
 
     /**
-     * display connection-related error pop-up box to the user
+     * Display error pop-up box to the user
      * @param message The message to be shown
      */
-    private void showConnectionErrorDialog(String message) {
+    private void showErrorDialog(String message) {
         JOptionPane.showMessageDialog(
                 null,
                 message,
-                "Unexpected error happened when connecting to the server using sockets",
+                "An error occurred",
                 JOptionPane.ERROR_MESSAGE);
     }
 
     /**
-     * Display input-related error pop-up box to the user
-     * @param message The message to be shown
+     * Display success message box to the user
      */
-    private void showInputErrorDialog(String message) {
+    private void showSuccessDialog(String message) {
         JOptionPane.showMessageDialog(
                 null,
                 message,
-                "Your input is missing or invalid",
-                JOptionPane.ERROR_MESSAGE);
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -207,7 +207,7 @@ public class ClientGUI extends JFrame{
         ArrayList<String> output = new ArrayList<>();
         // validate word input
         if(word.isEmpty() || !word.matches("[a-zA-Z]+")){
-            showInputErrorDialog("The input word is empty or not alphabetical");
+            showErrorDialog("The input word is empty or not alphabetical");
             return null;
         }
         else{
@@ -215,7 +215,7 @@ public class ClientGUI extends JFrame{
         }
         // validate meanings input
         if(needToInputMeanings && meanings.isEmpty()){
-            showInputErrorDialog("Please input one or more meanings. One meaning per line");
+            showErrorDialog("Please input one or more meanings. One meaning per line");
             return null;
         }
         else{

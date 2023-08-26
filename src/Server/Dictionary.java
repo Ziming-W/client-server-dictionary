@@ -9,7 +9,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Dictionary {
     private JSONObject jsonObject;
@@ -54,7 +53,7 @@ public class Dictionary {
         return true;
     }
 
-    public ArrayList<String> retrieve(String word){
+    public synchronized ArrayList<String> retrieve(String word){
         if(!jsonObject.has(word)){
             return null;
         }

@@ -1,4 +1,4 @@
-import Commnication.CommandCode;
+import Communication.CommandCode;
 
 public class TestMain {
 

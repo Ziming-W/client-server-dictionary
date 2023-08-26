@@ -1,8 +1,8 @@
 package Server;
 
-import Commnication.ClientRequest;
-import Commnication.CommandCode;
-import Commnication.ServerResponse;
+import Communication.ClientRequest;
+import Communication.CommandCode;
+import Communication.ServerResponse;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -39,7 +39,11 @@ public class Server {
             while(true){
                 Socket commSocket = listenSocket.accept();
                 System.out.println("Accepted connection from " + commSocket.getInetAddress());
-                Thread clientThread = new Thread(()->handleClientRequest(commSocket));
+                Thread clientThread = new Thread(() -> {
+                    System.out.println("Thread started for client: " + commSocket.getInetAddress());
+                    handleClientRequest(commSocket);
+                    System.out.println("Thread terminated for client: " + commSocket.getInetAddress());
+                });
                 clientThread.start();
             }
         }
@@ -49,33 +53,10 @@ public class Server {
         }
     }
 
-    private static void handleCreateRequest(ClientRequest request, ServerResponse response){
-        // TODO: Error handling here
-        response.setSuccessful(dic.create(request.getWord(), request.getMeaning()));
-    }
-
-    private static void handleRetrieveRequest(ClientRequest request, ServerResponse response){
-        // TODO: Error handling here
-        ArrayList<String> meanings = dic.retrieve(request.getWord());
-        if(meanings == null){
-            response.setSuccessful(false);
-        }
-        else{
-            response.setSuccessful(true);
-            response.setMeanings(meanings);
-        }
-    }
-
-    private static void handleUpdateRequest(ClientRequest request, ServerResponse response){
-        // TODO: Error handling here
-        response.setSuccessful(dic.update(request.getWord(), request.getMeaning()));
-    }
-
-    private static void handleDeleteRequest(ClientRequest request, ServerResponse response){
-        // TODO: Error handling here
-        response.setSuccessful(dic.delete(request.getWord()));
-    }
-
+    /**
+     * handle client CRUD request
+     * @param commSocket
+     */
     private static void handleClientRequest(Socket commSocket){
         try {
             ServerResponse response = new ServerResponse();
@@ -98,8 +79,9 @@ public class Server {
                 handleDeleteRequest(request, response);
             }
             else{
-                // TODO: how to close socket here?
-                throw new Exception("Unknow request type");
+                System.err.println("unknown request type");
+                commSocket.close();
+                return;
             }
             // send response to the client
             OutputStream outputStream = commSocket.getOutputStream();
@@ -111,6 +93,63 @@ public class Server {
             System.err.println("Error handling client: " + e.getMessage());
         }
     }
+
+
+    private static void handleCreateRequest(ClientRequest request, ServerResponse response){
+        // invalid input
+        if(!validateWordMeanings(request.getWord(), true, request.getMeaning())){
+            System.err.println("The validator in GUI is bypassed and an invalid create request is sent, dangerous!");
+            return;
+        }
+        response.setSuccessful(dic.create(request.getWord(), request.getMeaning()));
+    }
+
+    private static void handleRetrieveRequest(ClientRequest request, ServerResponse response){
+        // validate input
+        if(!validateWordMeanings(request.getWord(), false, null)){
+            System.err.println("The validator in GUI is bypassed and an invalid retrieve request is sent, dangerous");
+            return;
+        }
+        ArrayList<String> meanings = dic.retrieve(request.getWord());
+        if(meanings == null){
+            response.setSuccessful(false);
+        }
+        else{
+            response.setSuccessful(true);
+            response.setMeanings(meanings);
+        }
+    }
+
+    private static void handleUpdateRequest(ClientRequest request, ServerResponse response){
+        if(!validateWordMeanings(request.getWord(), true, request.getMeaning())){
+            System.err.println("The validator in GUI is bypassed and an invalid update request is sent, dangerous");
+            return;
+        }
+        response.setSuccessful(dic.update(request.getWord(), request.getMeaning()));
+    }
+
+    private static void handleDeleteRequest(ClientRequest request, ServerResponse response){
+        if(!validateWordMeanings(request.getWord(), false, null)){
+            System.err.println("The validator in GUI is bypassed and an invalid delete request is sent, dangerous");
+            return;
+        }
+        response.setSuccessful(dic.delete(request.getWord()));
+    }
+
+    /**
+     * validate the word and meanings of a clientRequest.
+     * In case if someone bypasses the GUI input validator and send data directly to the server
+     */
+    private static boolean validateWordMeanings(String word, boolean checkMeanings, ArrayList<String> meanings){
+        if(word.isEmpty() || !word.matches("[a-zA-Z]+")){
+            return false;
+        }
+        if(checkMeanings && (meanings == null || meanings.stream().anyMatch(String::isEmpty))){
+            return false;
+        }
+        return true;
+    }
+
 
     public static void main(String[] args){
         // validate args[0] and args[1]

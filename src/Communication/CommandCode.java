@@ -1,4 +1,4 @@
-package Commnication;
+package Communication;
 
 public enum CommandCode {
     CREATE(1),
