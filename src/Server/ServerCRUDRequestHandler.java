@@ -3,6 +3,7 @@ package Server;
 import Communication.ClientRequest;
 import Communication.CommandCode;
 import Communication.ServerResponse;
+import Validator.TextFieldInputValidator;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -102,10 +103,10 @@ public class ServerCRUDRequestHandler {
      * In case if someone bypasses the GUI input validator and send data directly to the server
      */
     public static boolean validateWordMeanings(String word, boolean checkMeanings, ArrayList<String> meanings){
-        if(word.isEmpty() || !word.matches("[a-zA-Z]+")){
+        if(!TextFieldInputValidator.validateWord(word)){
             return false;
         }
-        if(checkMeanings && (meanings == null || meanings.stream().anyMatch(String::isEmpty))){
+        if(checkMeanings && !TextFieldInputValidator.validateMeaningsArrayList(meanings)){
             return false;
         }
         return true;

@@ -57,6 +57,9 @@ public class ClientGUI extends JFrame{
         add(requestPanel, BorderLayout.CENTER);
         add(responsePanel, BorderLayout.SOUTH);
 
+        // apply font size to all
+        applyCustomFont(wordLabel, inputField, meaningTextArea, createButton, retrieveButton, updateButton, deleteButton, clearAllButton, responseTextArea);
+
         // make CRUDActionListenerBuilder
         ClientCRUDActionListenerBuilder crudBuilder = new ClientCRUDActionListenerBuilder(inputField, meaningTextArea, responseTextArea, serverAddress, serverPort);
 
@@ -89,6 +92,16 @@ public class ClientGUI extends JFrame{
         pack();
         setLocationRelativeTo(null); // Center the window
         setVisible(true);
+    }
+
+    /**
+     * set up font size
+     */
+    private void applyCustomFont(Component... components) {
+        Font customFont = new Font("Arial", Font.PLAIN, 16);
+        for (Component component : components) {
+            component.setFont(customFont);
+        }
     }
 
 }

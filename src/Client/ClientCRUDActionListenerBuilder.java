@@ -3,6 +3,7 @@ package Client;
 import Communication.ClientRequest;
 import Communication.CommandCode;
 import Communication.ServerResponse;
+import Validator.TextFieldInputValidator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -140,7 +141,7 @@ public class ClientCRUDActionListenerBuilder {
         String meanings = meaningTextArea.getText().trim();
         ArrayList<String> output = new ArrayList<>();
         // validate word input
-        if(word.isEmpty() || !word.matches("[a-zA-Z]+")){
+        if(!TextFieldInputValidator.validateWord(word)){
             showErrorDialog("The input word is empty or not alphabetical");
             return null;
         }

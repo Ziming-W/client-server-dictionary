@@ -3,6 +3,7 @@ package Server;
 import Communication.ClientRequest;
 import Communication.CommandCode;
 import Communication.ServerResponse;
+import Validator.AddressAndPortValidator;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -23,14 +24,9 @@ public class Server {
             System.exit(1);
         }
         // port number has to be valid
-        try {
-            int port = Integer.parseInt(args[0]);
-            if(!(port >= 1024 && port <= 49151)){
-                System.err.println("The port number is out of range [1024, 49151]");
-                System.exit(1);
-            }
-        } catch (NumberFormatException e) {
-            System.err.println("The port you input is not numeric");
+        String result = AddressAndPortValidator.validatePort(args[0]);
+        if(!result.isEmpty()){
+            System.err.println(result);
             System.exit(1);
         }
     }
