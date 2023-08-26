@@ -1,0 +1,17 @@
+{
+    "take": [
+        "remove something",
+        "to accept something",
+        "to measure something"
+    ],
+    "cat": [
+        "animal",
+        "cute"
+    ],
+    "distributed": ["to give something out to several people"],
+    "fire": [
+        "the state of burning that produces flames",
+        "the shooting of a gun"
+    ],
+    "translate": ["to change words into a different language"]
+}

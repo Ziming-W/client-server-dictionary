@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class TextFieldInputValidator {
 
     public static boolean validateWord(String word){
-        return word.isEmpty() && word.matches("[a-zA-Z]+");
+        return !word.isEmpty() && word.matches("[a-zA-Z'-]+");
     }
 
     public static boolean validateMeaningsArrayList(ArrayList<String> meanings){
