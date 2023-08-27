@@ -1,3 +1,4 @@
+// Author: Ziming Wang (1180051) https://github.com/Ziming-W
 package Validator;
 
 import java.net.InetAddress;

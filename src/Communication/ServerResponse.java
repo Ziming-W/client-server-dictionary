@@ -1,3 +1,4 @@
+// Author: Ziming Wang (1180051) https://github.com/Ziming-W
 package Communication;
 
 import java.io.Serializable;
@@ -7,13 +8,10 @@ public class ServerResponse implements Serializable {
 
     private boolean successful;
 
-    private String word;
-
     private ArrayList<String> meanings;
 
-    public ServerResponse(boolean successful, String word, ArrayList<String> meanings) {
+    public ServerResponse(boolean successful, ArrayList<String> meanings) {
         this.successful = successful;
-        this.word = word;
         this.meanings = meanings;
     }
 
@@ -25,14 +23,6 @@ public class ServerResponse implements Serializable {
 
     public void setSuccessful(boolean successful) {
         this.successful = successful;
-    }
-
-    public String getWord() {
-        return word;
-    }
-
-    public void setWord(String word) {
-        this.word = word;
     }
 
     public ArrayList<String> getMeanings() {

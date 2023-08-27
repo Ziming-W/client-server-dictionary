@@ -1,3 +1,4 @@
+// Author: Ziming Wang (1180051) https://github.com/Ziming-W
 package Server;
 
 import Communication.ClientRequest;
