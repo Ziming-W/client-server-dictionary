@@ -35,7 +35,9 @@ public class Dictionary {
             System.err.println("IO exception: " + path);
             System.exit(1);
         } catch (JSONException e) {
-            System.err.println("JSON parsing exception: " + path);
+            System.err.println("JSON parsing exception, please double check your json file format: " + path);
+            System.err.println("The json file may be in an invalid format, e.g. empty file without braces");
+            System.err.println("If you want to initialize an empty dic, at least put an empty pair of braces{}");
             System.exit(1);
         } catch (Exception e) {
             System.err.println("An unexpected error occurred.");

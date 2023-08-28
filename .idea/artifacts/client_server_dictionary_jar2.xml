@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="client-server-dictionary:jar2">
+    <output-path>$PROJECT_DIR$/out/artifacts/client_server_dictionary_jar2</output-path>
+    <root id="archive" name="client-server-dictionary.jar">
+      <element id="module-output" name="client-server-dictionary" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/external-dependency/json-20230618.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

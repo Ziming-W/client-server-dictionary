@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="server">
-    <output-path>$PROJECT_DIR$/produced-jar/server</output-path>
-    <root id="archive" name="client-server-dictionary.jar">
-      <element id="module-output" name="client-server-dictionary" />
-      <element id="extracted-dir" path="$USER_HOME$/Downloads/json-20230618.jar" path-in-jar="/" />
-    </root>
-  </artifact>
-</component>

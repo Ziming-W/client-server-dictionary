@@ -27,6 +27,11 @@ public class ServerCRUDRequestHandler {
             // create a DataInputStream so we can read data from it.
             ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
             ClientRequest request = (ClientRequest)objectInputStream.readObject();
+            if(request == null){
+                System.err.println("Receive a null request, dangerous, client GUI is bypassed, close socket now");
+                commSocket.close();
+                return;
+            }
             // handle request
             if(request.getCommandCode() == CommandCode.CREATE){
                 handleCreateRequest(request, response, dic);

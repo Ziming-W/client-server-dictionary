@@ -1,2 +1,0 @@
-1. security, both client and server has security feature, prevent someone bypasses frontend
-

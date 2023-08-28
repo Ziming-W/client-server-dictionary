@@ -143,7 +143,7 @@ public class ClientCRUDActionListenerBuilder {
         ArrayList<String> output = new ArrayList<>();
         // validate word input
         if(!TextFieldInputValidator.validateWord(word)){
-            showErrorDialog("The input word is empty or not alphabetical");
+            showErrorDialog("The input word is empty/not alphabetical/consists of multiple words");
             return null;
         }
         else{
